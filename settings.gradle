@@ -1,0 +1,2 @@
+
+include "spring-mvc-hibernate-orm", "spring-mvc-hibernate-jpa"

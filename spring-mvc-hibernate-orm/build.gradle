@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.4.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+configurations {
+    providedRuntime
+    all*.exclude group: 'org.springframework.boot', module:'spring-boot-starter-logging'
+}
+
+repositories {
+    jcenter()
+    maven { url "http://repo.spring.io/libs-snapshot" }
+}
+
+dependencies {
+    // spring boot starter
+    compile 'org.springframework.boot:spring-boot-starter:1.2.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web:1.2.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-log4j:1.2.4.RELEASE'
+    
+    // springframework
+    compile 'org.springframework:spring-tx:4.1.6.RELEASE'
+    compile 'org.springframework:spring-orm:4.1.6.RELEASE'
+    
+    // hibernate
+    compile 'org.hibernate:hibernate-core:4.3.10.Final'
+    compile 'org.hibernate:hibernate-ehcache:4.3.10.Final'
+    compile 'net.sf.ehcache:ehcache-core:2.6.11'
+    
+    
+    // drivers
+    compile 'mysql:mysql-connector-java:5.1.35'
+    
+    // javax.servlet
+    compile 'javax.servlet:jstl:1.2'
+    
+    // providedRuntime
+    providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper:8.0.22'
+    providedRuntime 'taglibs:standard:1.1.2'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat:1.2.4.RELEASE'
+}
+
+war {
+    baseName = 'spring-mvc-hibernate-orm'
+    version = '1.0.0'
+}
+
