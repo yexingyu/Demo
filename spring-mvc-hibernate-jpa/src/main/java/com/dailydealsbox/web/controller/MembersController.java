@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dailydealsbox.database.model.Member;
-import com.dailydealsbox.service.MemberService;
+import com.dailydealsbox.database.service.MemberService;
 import com.dailydealsbox.web.base.BaseResponseData;
 import com.dailydealsbox.web.base.GeneralResponseData;
 

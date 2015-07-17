@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.dailydealsbox.database.model.base;
 
@@ -26,11 +26,11 @@ public abstract class BaseEntityModel extends BaseModel {
 
   @Temporal(value = TemporalType.TIMESTAMP)
   @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
-  private Date   createdAt = new Date();
+  private Date createdAt = new Date();
 
   @Temporal(value = TemporalType.TIMESTAMP)
   @Column(name = "modified_at", nullable = false, updatable = false, insertable = false)
-  private Date   modifiedAt;
+  private Date modifiedAt;
 
   /**
    * @return the createdAt
