@@ -28,7 +28,7 @@ import com.dailydealsbox.database.model.base.BaseEntityModel;
  */
 @Entity
 @Table(name = "members", uniqueConstraints = { @UniqueConstraint(columnNames = "account") })
-@SQLDelete(sql = "update member set deleted = 1 where id = ?")
+@SQLDelete(sql = "update member set deleted = true where id = ?")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Member extends BaseEntityModel {
 
