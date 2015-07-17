@@ -1,8 +1,10 @@
 /**
- * 
+ *
  */
 package com.dailydealsbox.web;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 
 import javax.persistence.SharedCacheMode;
@@ -20,11 +22,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 /**
  * @author x_ye
@@ -38,49 +44,74 @@ public class WebApplication extends SpringBootServletInitializer {
   public static Logger logger = LoggerFactory.getLogger(WebApplication.class);
 
   @Autowired
-  private Environment  environment;
+  private Environment environment;
+
+  /**
+   * faviconHandlerMapping
+   *
+   * @return
+   */
+  @Bean
+  public SimpleUrlHandlerMapping faviconHandlerMapping() {
+    SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();
+    mapping.setOrder(Integer.MIN_VALUE);
+    mapping.setUrlMap(Collections.singletonMap("favicon.ico", this.faviconRequestHandler()));
+    return mapping;
+  }
+
+  /**
+   * faviconRequestHandler
+   *
+   * @return
+   */
+  @Bean
+  protected ResourceHttpRequestHandler faviconRequestHandler() {
+    ResourceHttpRequestHandler requestHandler = new ResourceHttpRequestHandler();
+    requestHandler.setLocations(Arrays.<Resource> asList(new ClassPathResource("/")));
+    return requestHandler;
+  }
 
   /**
    * dataSource
-   * 
+   *
    * @return
    */
   @Bean
   public DataSource dataSource() {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-    dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-    dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-    dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+    dataSource.setDriverClassName(this.environment.getRequiredProperty("jdbc.driverClassName"));
+    dataSource.setUrl(this.environment.getRequiredProperty("jdbc.url"));
+    dataSource.setUsername(this.environment.getRequiredProperty("jdbc.username"));
+    dataSource.setPassword(this.environment.getRequiredProperty("jdbc.password"));
     return dataSource;
   }
 
   /**
    * entityManagerFactory
-   * 
+   *
    * @return
    */
   @Bean
   public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
     LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-    entityManagerFactoryBean.setDataSource(dataSource());
+    entityManagerFactoryBean.setDataSource(this.dataSource());
     entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
     entityManagerFactoryBean.setPackagesToScan("com.dailydealsbox.database.model");
-    entityManagerFactoryBean.setJpaProperties(hibernateProperties());
+    entityManagerFactoryBean.setJpaProperties(this.hibernateProperties());
     entityManagerFactoryBean.setSharedCacheMode(SharedCacheMode.ALL);
     return entityManagerFactoryBean;
   }
 
   /**
    * hibernateProperties
-   * 
+   *
    * @return
    */
   private Properties hibernateProperties() {
     Properties properties = new Properties();
-    properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
-    properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
-    properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+    properties.put("hibernate.dialect", this.environment.getRequiredProperty("hibernate.dialect"));
+    properties.put("hibernate.show_sql", this.environment.getRequiredProperty("hibernate.show_sql"));
+    properties.put("hibernate.format_sql", this.environment.getRequiredProperty("hibernate.format_sql"));
     properties.put("hibernate.enable_lazy_load_no_trans", true);
 
     // Second Cache Settings
@@ -88,21 +119,20 @@ public class WebApplication extends SpringBootServletInitializer {
     properties.put("hibernate.cache.use_structured_entries", true);
     properties.put("hibernate.cache.use_query_cache", true);
     properties.put("hibernate.cache.use_second_level_cache", true);
-    properties.put("hibernate.cache.region.factory_class",
-        "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+    properties.put("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
     properties.put("net.sf.ehcache.configurationResourceName", "ehcache.xml");
     return properties;
   }
 
   /**
    * transactionManager
-   * 
+   *
    * @return
    */
   @Bean
   public JpaTransactionManager transactionManager() {
     JpaTransactionManager transactionManager = new JpaTransactionManager();
-    transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+    transactionManager.setEntityManagerFactory(this.entityManagerFactory().getObject());
     return transactionManager;
   }
 
@@ -119,7 +149,7 @@ public class WebApplication extends SpringBootServletInitializer {
 
   /**
    * main
-   * 
+   *
    * @param args
    */
   public static void main(String[] args) {

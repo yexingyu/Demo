@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.dailydealsbox.database.model;
 
@@ -25,7 +25,7 @@ public class MemberPhone extends BaseModel {
 
   @NotNull
   @Column(name = "member_id", nullable = false)
-  private int    memberId;
+  private int memberId;
 
   @NotNull
   @Column(name = "country_code", nullable = false, length = 10)
@@ -38,7 +38,7 @@ public class MemberPhone extends BaseModel {
   @NotNull
   @Column(name = "type", nullable = false)
   @Enumerated(EnumType.STRING)
-  private TYPE   type;
+  private TYPE type;
 
   /**
    * @return the memberId

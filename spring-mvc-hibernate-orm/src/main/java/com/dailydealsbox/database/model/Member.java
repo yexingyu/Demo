@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.dailydealsbox.database.model;
 
@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.cache.annotation.Cacheable;
+import org.hibernate.annotations.SQLDelete;
 
 import com.dailydealsbox.database.model.base.BaseEntityModel;
 
@@ -28,40 +28,100 @@ import com.dailydealsbox.database.model.base.BaseEntityModel;
  */
 @Entity
 @Table(name = "members", uniqueConstraints = { @UniqueConstraint(columnNames = "account") })
-@Cacheable
+@SQLDelete(sql = "update member set deleted = 1 where id = ?")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Member extends BaseEntityModel {
 
   @NotNull
   @Size(min = 10, max = 100)
   @Column(name = "account", nullable = false, length = 100)
-  private String           account;
+  private String account;
 
   @NotNull
   @Column(name = "password", nullable = false, length = 32)
-  private String           password;
+  private String password;
 
   @NotNull
   @Column(name = "first_name", nullable = false, length = 100)
-  private String           firstName;
+  private String firstName;
 
   @NotNull
   @Column(name = "middle_name", nullable = false, length = 100)
-  private String           middleName;
+  private String middleName;
 
   @NotNull
   @Column(name = "last_name", nullable = false, length = 100)
-  private String           lastName;
+  private String lastName;
 
   @NotNull
   @Column(name = "role", nullable = false)
   @Enumerated(EnumType.STRING)
-  private ROLE             role;
+  private ROLE role;
+
+  @NotNull
+  @Column(name = "login_type", nullable = false)
+  @Enumerated(EnumType.STRING)
+  private LOGIN_TYPE loginType;
 
   @OneToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
   private Set<MemberPhone> phones;
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_id")
+  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+  private Set<MemberEmail> emails;
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_id")
+  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+  private Set<MemberAddress> addresses;
+
+  /**
+   * @return the addresses
+   */
+  public Set<MemberAddress> getAddresses() {
+    return this.addresses;
+  }
+
+  /**
+   * @param addresses
+   *          the addresses to set
+   */
+  public void setAddresses(Set<MemberAddress> addresses) {
+    this.addresses = addresses;
+  }
+
+  /**
+   * @return the loginType
+   */
+  public LOGIN_TYPE getLoginType() {
+    return this.loginType;
+  }
+
+  /**
+   * @param loginType
+   *          the loginType to set
+   */
+  public void setLoginType(LOGIN_TYPE loginType) {
+    this.loginType = loginType;
+  }
+
+  /**
+   * @return the emails
+   */
+  public Set<MemberEmail> getEmails() {
+    return this.emails;
+  }
+
+  /**
+   * @param emails
+   *          the emails to set
+   */
+  public void setEmails(Set<MemberEmail> emails) {
+    this.emails = emails;
+  }
 
   /**
    * @return the phones
@@ -173,5 +233,12 @@ public class Member extends BaseEntityModel {
    */
   public static enum ROLE {
     MEMBER, ADMIN
-  };
+  }
+
+  /**
+   * @author x_ye
+   */
+  public static enum LOGIN_TYPE {
+    DAILYDEALSBOX, FACEBOOK
+  }
 }

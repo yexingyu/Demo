@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.dailydealsbox.database.model;
 
@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.cache.annotation.Cacheable;
 
 import com.dailydealsbox.database.model.base.BaseModel;
 
@@ -21,13 +20,12 @@ import com.dailydealsbox.database.model.base.BaseModel;
  */
 @Entity
 @Table(name = "member_phones")
-@Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MemberPhone extends BaseModel {
 
   @NotNull
   @Column(name = "member_id", nullable = false)
-  private int    memberId;
+  private int memberId;
 
   @NotNull
   @Column(name = "country_code", nullable = false, length = 10)
@@ -40,7 +38,7 @@ public class MemberPhone extends BaseModel {
   @NotNull
   @Column(name = "type", nullable = false)
   @Enumerated(EnumType.STRING)
-  private TYPE   type;
+  private TYPE type;
 
   /**
    * @return the memberId

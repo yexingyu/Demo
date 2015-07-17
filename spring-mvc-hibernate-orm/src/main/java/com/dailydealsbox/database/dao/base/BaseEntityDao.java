@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.dailydealsbox.database.dao.base;
 
@@ -20,35 +20,34 @@ public abstract class BaseEntityDao<T extends BaseEntityModel> {
 
   /**
    * getSession
-   * 
+   *
    * @return
    */
   protected Session getSession() {
-    return sessionFactory.getCurrentSession();
+    return this.sessionFactory.getCurrentSession();
   }
 
   /**
    * persist
-   * 
+   *
    * @param entity
    */
   public void persist(T entity) {
-    getSession().persist(entity);
+    this.getSession().persist(entity);
   }
 
   /**
    * delete
-   * 
+   *
    * @param id
    */
   public void delete(T entity) {
-    entity.setStatus(BaseEntityModel.STATUS.DELETED);
-    this.getSession().update(entity);
+    this.delete(entity);
   }
 
   /**
    * get
-   * 
+   *
    * @param clazz
    * @param id
    * @return

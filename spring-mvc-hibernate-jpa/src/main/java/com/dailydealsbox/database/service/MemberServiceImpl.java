@@ -1,18 +1,17 @@
 /**
- * 
+ *
  */
-package com.dailydealsbox.database.service.impl;
-
-import java.util.List;
+package com.dailydealsbox.database.service;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dailydealsbox.database.model.Member;
 import com.dailydealsbox.database.repository.MemberRepository;
-import com.dailydealsbox.database.service.MemberService;
 
 /**
  * @author x_ye
@@ -30,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
    */
   @Override
   public Member get(int id) {
-    return repo.findOne(id);
+    return this.repo.findOne(id);
   }
 
   /*
@@ -39,7 +38,7 @@ public class MemberServiceImpl implements MemberService {
    */
   @Override
   public Member getByAccount(String account) {
-    return repo.findByAccount(account);
+    return this.repo.findByAccount(account);
   }
 
   /*
@@ -47,8 +46,8 @@ public class MemberServiceImpl implements MemberService {
    * @see com.dailydealsbox.service.MemberService#getAll()
    */
   @Override
-  public List<Member> getAll() {
-    return (List<Member>) repo.findAll();
+  public Page<Member> getAll(Pageable pageable) {
+    return this.repo.findByDeletedOrderByCreatedAtDesc(false, pageable);
   }
 
 }
